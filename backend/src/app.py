@@ -35,7 +35,7 @@ def getUsers():
          })
     return jsonify(users)
 
-@app.route('/user/<id>', methods=['GET']) # Crea rutas para buscar usuarios 
+@app.route('/user/<id>', methods=['GET']) # Crea rutas para buscar un usuario 
 def getUser(id):
     user = db.find_one({'_id':ObjectId(id)})
     print(user)
@@ -51,7 +51,7 @@ def deleteUser(id):
     db.delete_one({'_id': ObjectId(id)}) #Elimina el primer dato que coincide con la búsqueda. 
     return jsonify({'msg': 'User delete'})
 
-@app.route('/users/<id>', methods=['PUT']) # Crea rutas para poder crear usuarios 
+@app.route('/users/<id>', methods=['PUT']) # Crea rutas para poder editar usuario 
 def updeteUser(id):
     db.update_one({'_id': ObjectId(id)}, {'$set':{
         'name': request.json['name'],
