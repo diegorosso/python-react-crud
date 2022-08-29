@@ -35,7 +35,7 @@ def getUsers():
          })
     return jsonify(users)
 
-@app.route('/user/<id>', methods=['GET']) # Crea rutas para buscar un usuario 
+@app.route('/user/<id>', methods=['GET']) # Crea rutas para obtener un usuario 
 def getUser(id):
     user = db.find_one({'_id':ObjectId(id)})
     print(user)
