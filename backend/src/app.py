@@ -12,6 +12,7 @@ CORS(app)
 
 db = mongo.db.users #colección de usuarios
 
+
 @app.route('/users', methods=['POST']) # Crea rutas para crear usuarios 
 def createUser():
     
