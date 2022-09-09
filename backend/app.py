@@ -1,17 +1,20 @@
 from flask import Flask, request, jsonify #Request se encarga de extrar los datos que el cliente me podria estar enviando.  
 from flask_pymongo import PyMongo
 from flask_cors import CORS
-
 from bson import ObjectId
 
 app = Flask(__name__) #inicializa flask.
-app.config['MONGO_URI'] = 'mongodb://localhost/pythonreactdb' #base de datos local.
+app.config['MONGO_URI'] = 'mongodb+srv://diego2:diego2@cluster0.kqesm.mongodb.net/my-python-db' #base de datos local.
+ 
 mongo = PyMongo(app) #devuelve un objeto para pader manipularlo. es la conexión con la base de datos local.
 
 CORS(app)
 
 db = mongo.db.users #colección de usuarios
 
+@app.route("/")
+def index():
+    return jsonify({"message": "API OK"})
 
 @app.route('/users', methods=['POST']) # Crea rutas para crear usuarios 
 def createUser():
@@ -35,15 +38,17 @@ def createUser():
 def getUsers():
     users = []
     try:
-        for doc in db.find(): #busquead de todos los datos y retorna una lista.
-             users.append({
+        for doc in db.find(): #busqueda de todos los datos y retorna una lista.
+            print(doc)
+            users.append({
                 '_id': str(ObjectId(doc['_id'])), #ID en formato string
                 'name': doc['name'],
                 'email': doc['email'],
                 'password': doc['password']
-             })
+            })
     except:
-        return "No se pudo conectar a mongo",408
+        return "No se pudo conectar a mongo", 408
+
 
     return jsonify(users)
 
@@ -74,6 +79,8 @@ def updeteUser(id):
         'password': request.json['password']
     }})
     return jsonify({'msg': 'User update'})
+
+
 
 if __name__ == "__main__":
     app.run(debug=True) #debug cada vez que hace cambio el código reinicia.
