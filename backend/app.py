@@ -47,7 +47,7 @@ def getUsers():
                 'password': doc['password']
             })
     except:
-        return "No se pudo conectar a mongo", 408
+        return "No se tar a mongo", 408
 
 
     return jsonify(users)
