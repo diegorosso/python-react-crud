@@ -14,7 +14,7 @@ db = mongo.db.users #colección de usuarios
 
 @app.route("/")
 def index():
-    return jsonify({"message": "API OK"})
+    return  "API OK"
 
 @app.route('/users', methods=['POST']) # Crea rutas para crear usuarios 
 def createUser():
