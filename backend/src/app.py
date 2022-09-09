@@ -14,31 +14,45 @@ db = mongo.db.users #colección de usuarios
 
 @app.route('/users', methods=['POST']) # Crea rutas para crear usuarios 
 def createUser():
+    
+    data = request.get_json()
+    if ('name' not in data or data['name'] == '' or 'email' not in data or 'password' not in data):
+        return {"msg": "Missing parameters"}, 400
+   
+   
     id = db.insert_one({         #Guardar datos con metodo Insert
-        'name': request.json['name'],
-        'email': request.json['email'],
-        'password': request.json['password']
-    })
+        'name': data['name'],
+        'email': data['email'],
+        'password': data['password']
+     })
 
-    return jsonify(str(id.inserted_id)) #str convierte el objeto en formato string                
+    return jsonify(str(id.inserted_id)) #str convierte el objeto en formato string  
+                 
 
 
 @app.route('/users', methods=['GET']) # Crea rutas para obtener usuarios // consultar todos los datos
 def getUsers():
     users = []
-    for doc in db.find(): #busquead de todos los datos y retorna una lista.
-         users.append({
-            '_id': str(ObjectId(doc['_id'])), #ID en formato string
-            'name': doc['name'],
-            'email': doc['email'],
-            'password': doc['password']
-         })
+    try:
+        for doc in db.find(): #busquead de todos los datos y retorna una lista.
+             users.append({
+                '_id': str(ObjectId(doc['_id'])), #ID en formato string
+                'name': doc['name'],
+                'email': doc['email'],
+                'password': doc['password']
+             })
+    except:
+        return "No se pudo conectar a mongo",408
+
     return jsonify(users)
 
 @app.route('/user/<id>', methods=['GET']) # Crea rutas para obtener un usuario 
 def getUser(id):
-    user = db.find_one({'_id':ObjectId(id)})
-    print(user)
+    try:
+        user = db.find_one({'_id':ObjectId(id)})
+    except:
+        return "id no existe", 404
+   
     return jsonify({
         '_id': str(ObjectId(user['_id'])),
         'name': user['name'],
